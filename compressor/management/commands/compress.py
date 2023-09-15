@@ -169,12 +169,17 @@ class Command(BaseCommand):
 
             for path in paths:
                 for root, dirs, files in os.walk(path, followlinks=follow_links):
-                    templates.update(
-                        os.path.relpath(os.path.join(root, name), path)
-                        for name in files
-                        if not name.startswith(".")
-                        and any(fnmatch(name, "*%s" % glob) for glob in extensions)
-                    )
+                    for name in files:
+                        if not name.startswith(".") and any(fnmatch(name, "*%s" % glob) for glob in extensions):
+                            abs_path = os.path.join(root, name)
+                            rel_path = os.path.relpath(abs_path, path)
+
+                            # Check if the relative path is already in templates.
+                            if rel_path in templates and abs_path not in templates:
+                                # Add the absolute path if the relative path corresponds to a different absolute path.
+                                templates.add(abs_path)
+                            else:
+                                templates.add(rel_path)
         elif engine == "jinja2":
             env = settings.COMPRESS_JINJA2_GET_ENVIRONMENT()
             if env and hasattr(env, "list_templates"):
