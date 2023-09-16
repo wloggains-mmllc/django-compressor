@@ -173,9 +173,8 @@ class Command(BaseCommand):
                         if not name.startswith(".") and any(fnmatch(name, "*%s" % glob) for glob in extensions):
                             abs_path = os.path.join(root, name)
                             rel_path = os.path.relpath(abs_path, path)
-
                             # Check if the relative path is already in templates.
-                            if rel_path in templates and abs_path not in templates:
+                            if rel_path in templates:
                                 # Add the absolute path if the relative path corresponds to a different absolute path.
                                 templates.add(abs_path)
                             else:
