@@ -139,6 +139,7 @@ class Command(BaseCommand):
                 "settings or set 'loaders' in your "
                 "TEMPLATES dictionary."
             )
+        print("This is the latest build.")
         templates = set()
         if engine == "django":
             paths = set()
